@@ -50,6 +50,9 @@ public class PlayerMovement : MonoBehaviour
     private float desiredX;
     private bool cancellingGrounded;
 
+    //Health values
+    public HealthBar healthBar;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -57,11 +60,20 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        healthBar.updateHealthBar();
+
         playerScale = transform.localScale;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
+    //Function to reduce and update life
+    //void TakeDamage(float damage)
+    //{
+    //   currentHealth -= damage;
+    //
+    //        healthBar.SetHealth(currentHealth);
+    //}
 
     private void FixedUpdate()
     {
@@ -72,6 +84,12 @@ public class PlayerMovement : MonoBehaviour
     {
         MyInput();
         Look();
+
+        //Test for the health bar
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            healthBar.TakeDamage(7);
+        }
     }
 
     private void MyInput()
