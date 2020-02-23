@@ -1050,7 +1050,7 @@ PrefabInstance:
     - target: {fileID: 6100967877907892251, guid: daa07afaa7820aa47855a3b4d2723a8e,
         type: 3}
       propertyPath: field of view
-      value: 43
+      value: 66
       objectReference: {fileID: 0}
     - target: {fileID: 6100967877907892251, guid: daa07afaa7820aa47855a3b4d2723a8e,
         type: 3}
@@ -1075,7 +1075,7 @@ PrefabInstance:
     - target: {fileID: 6100967877907892251, guid: daa07afaa7820aa47855a3b4d2723a8e,
         type: 3}
       propertyPath: m_FocalLength
-      value: 30.463776
+      value: 18.478378
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: daa07afaa7820aa47855a3b4d2723a8e, type: 3}
@@ -4234,7 +4234,7 @@ PrefabInstance:
     - target: {fileID: 4965860735823636283, guid: 457a1b0f2f87b874abc29cfba14ee1ad,
         type: 3}
       propertyPath: m_RenderMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4965860735823636283, guid: 457a1b0f2f87b874abc29cfba14ee1ad,
         type: 3}
