@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     //Assingables
     public Transform playerCam;
     public Transform orientation;
+    public Camera fpsCam;
 
     //Other
     private Rigidbody rb;
@@ -53,9 +54,50 @@ public class PlayerMovement : MonoBehaviour
     //Health values
     public HealthBar healthBar;
 
+    //Hookstshot state machine
+    private Vector3 hookShotPosition;
+    private Vector3 hookShotDirection;
+    private State state;
+    private enum State
+    {
+        Normal,
+        HookshotFlyingPlayer
+    }
+
+    private void handleHookShotStart()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+           if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out RaycastHit hit))
+            {
+                //Raycast has hit something
+                hookShotPosition = hit.point;
+                hookShotDirection = fpsCam.transform.forward;
+                state = State.HookshotFlyingPlayer;
+            }
+        }
+    }
+
+    private void handleHookShotMovement()
+    {
+        Vector3 hookshotDirection = (hookShotPosition - transform.position).normalized;
+        float hookshotSpeed = 100f;
+        
+        float reachedHookshotPosition = 2f;
+        rb.AddForce(hookShotDirection * hookshotSpeed);
+        if (Vector3.Distance(transform.position, hookShotPosition) < reachedHookshotPosition)
+        {
+            //Reached Hooshot
+            rb.velocity = Vector3.zero;
+            state = State.Normal;
+        }
+        
+    }
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        state = State.Normal;
     }
 
     void Start()
@@ -77,19 +119,39 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Movement();
+        switch (state)
+        {
+            default:
+            case State.Normal:
+                Movement();
+                break;
+            case State.HookshotFlyingPlayer:
+                break;
+        }
     }
 
     private void Update()
     {
-        MyInput();
-        Look();
-
-        //Test for the health bar
-        if (Input.GetKeyDown(KeyCode.Space))
+        switch (state)
         {
-            healthBar.TakeDamage(7);
+            default:
+            case State.Normal:
+                MyInput();
+                Look();
+                handleHookShotStart();
+
+                //Test for the health bar
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    healthBar.TakeDamage(7);
+                }
+                break;
+            case State.HookshotFlyingPlayer:
+                Look();
+                handleHookShotMovement();
+                break;
         }
+        
     }
 
     private void MyInput()
@@ -101,7 +163,7 @@ public class PlayerMovement : MonoBehaviour
 
         //Crouching
         if (Input.GetKeyDown(KeyCode.LeftControl))
-            StartCrouch();
+            StartCrouch(); 
         if (Input.GetKeyUp(KeyCode.LeftControl))
             StopCrouch();
     }
