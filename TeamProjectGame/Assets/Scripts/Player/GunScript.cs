@@ -9,9 +9,33 @@ public class GunScript : MonoBehaviour
     public Camera fpsCam;
     public ParticleSystem gunFlash;
 
+    public int maxAmmo = 8;
+    public int currentAmmo;
+    public float reloadTime = 2f;
+    private bool isReloading = false;
+
+    void Start()
+    {
+        currentAmmo = maxAmmo;
+    }
+
+    void OnEnable ()
+    {
+        isReloading = false;
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (isReloading)
+            return;
+
+        if (currentAmmo <= 0)
+        {
+            StartCoroutine(Reload());
+            return;
+        }
+
         if (Input.GetButtonDown("Fire1"))
         {
             shoot();
@@ -36,5 +60,13 @@ public class GunScript : MonoBehaviour
                 target.TakeDamage(damage);
             }
         }
+    }
+
+    IEnumerator Reload()
+    {
+        isReloading = true;
+        yield return new WaitForSeconds(reloadTime);
+        currentAmmo = maxAmmo;
+        isReloading = false;
     }
 }
